@@ -7,6 +7,44 @@ import io.kotest.matchers.shouldBe
 class KStringSimTests : ShouldSpec() {
 
     init {
+        context("Jaro Winkler Distance strategy") {
+            should("find Jaro Winkler distance if values are same") {
+                val result = KStringSim.Builder()
+                    .values("hello", "hello")
+                    .strategy(StrategyType.JARO_WINKLER)
+                    .compare()
+
+                result shouldBe CompareResult.JaroWinkler(1.0, CompareResult.Jaro(1.0, 0, 5))
+            }
+
+            should("find Jaro Winkler distance if values are different") {
+                val result = KStringSim.Builder()
+                    .values("MARTIN", "MARTINEZ")
+                    .strategy(StrategyType.JARO_WINKLER)
+                    .compare()
+
+                result shouldBe CompareResult.JaroWinkler(0.9666666666666667, CompareResult.Jaro(0.9166666666666666, 0, 6))
+            }
+
+            should("find Jaro Winkler distance if values are completely different") {
+                val result = KStringSim.Builder()
+                    .values("test", "brook")
+                    .strategy(StrategyType.JARO_WINKLER)
+                    .compare()
+
+                result shouldBe CompareResult.JaroWinkler(0.4, CompareResult.Jaro(0.0, 0, 0))
+            }
+
+            should("find Jaro Winkler distance if values has different order") {
+                val result = KStringSim.Builder()
+                    .values("test", "tset")
+                    .strategy(StrategyType.JARO_WINKLER)
+                    .compare()
+
+                result shouldBe CompareResult.JaroWinkler(0.95, CompareResult.Jaro(0.9166666666666666, 1, 4))
+            }
+        }
+
         context("Jaro Distance strategy") {
             should("find Jaro distance if values are same") {
                 val result = KStringSim.Builder()

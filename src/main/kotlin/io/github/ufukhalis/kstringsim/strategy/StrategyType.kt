@@ -10,6 +10,7 @@ enum class StrategyType {
             return when (this) {
                 LEVENSHTEIN -> LevenshteinStrategy()
                 JARO_DISTANCE -> JaroStrategy()
+                JARO_WINKLER -> JaroWinklerStrategy()
                 else -> throw IllegalArgumentException("Invalid strategy type")
             }
         }
